@@ -1,0 +1,21 @@
+export const floatingQuotes = [
+    'complete and total peace',
+    'a divorce that refuses to conform to scripts',
+    'pressure cooker method',
+    'transformation as ongoing practice',
+    'Love is a living thing, fluid and ever-adapting',
+    'What if divorce could be an act of love?',
+    'the work of showing up fully for his life',
+    'genuine transformation in public view',
+    "not your therapist's divorce story",
+    'a manifesto for a new way of seeing how love evolves',
+    'the messy middle',
+    'voraciously curious',
+    'controlled burn, clearing ground for something new',
+    'dramatic molting, painful yet necessary',
+    'the work of showing up fully',
+    'intentional dissolution',
+    'what if ending could be a beginning?',
+    'stories we tell about separation',
+    "comfort isn't the goal, transformation is"
+];

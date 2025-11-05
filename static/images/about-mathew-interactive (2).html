@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Mathew Moslow - Interactive Biography</title>
+    <style>
+        :root {
+            --primary: #4a7c59;
+            --secondary: #8b7355;
+            --accent: #d4a574;
+            --dark: #2c2c2c;
+            --light: #666;
+            --cream: #f5f3f0;
+            --white: #ffffff;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: var(--cream);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section with Animated Text */
+        .about-hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(to bottom, white, var(--cream));
+            padding: 40px 20px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero-statement {
+            font-size: 2.5rem;
+            line-height: 1.4;
+            color: var(--dark);
+            margin-bottom: 40px;
+            font-weight: 300;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.3s forwards;
+        }
+
+        .hero-statement .highlight {
+            position: relative;
+            display: inline-block;
+            color: var(--primary);
+            font-weight: 400;
+        }
+
+        .hero-statement .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            animation: underlineReveal 1s ease 1.5s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+        }
+
+        .scroll-text {
+            font-size: 0.9rem;
+            color: var(--light);
+            letter-spacing: 1px;
+        }
+
+        .scroll-arrow {
+            width: 30px;
+            height: 30px;
+            border-right: 2px solid var(--primary);
+            border-bottom: 2px solid var(--primary);
+            transform: rotate(45deg);
+            animation: bounce 2s infinite;
+        }
+
+        /* Journey Timeline Section */
+        .journey-section {
+            padding: 100px 20px;
+            background: white;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .journey-timeline {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-1);
+        }
+
+        .timeline-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .timeline-location {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .timeline-description {
+            line-height: 1.8;
+            color: var(--light);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, rgba(74, 124, 89, 0.05) 0%, rgba(139, 115, 85, 0.05) 100%);
+        }
+
+        .stats-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        .stat-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0.1;
+            transition: transform 0.6s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scale(1.2);
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .stat-description {
+            font-size: 0.9rem;
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        /* Progress bars for stats */
+        .stat-progress {
+            width: 100%;
+            height: 8px;
+            background: var(--cream);
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .stat-progress-bar {
+            height: 100%;
+            background: var(--gradient-1);
+            border-radius: 4px;
+            width: 0;
+            transition: width 1.5s ease;
+        }
+
+        .stat-card.visible .stat-progress-bar {
+            width: var(--progress);
+        }
+
+        /* Writing Philosophy Section */
+        .philosophy-section {
+            padding: 100px 20px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .philosophy-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .philosophy-quote {
+            font-size: 2rem;
+            line-height: 1.6;
+            color: var(--dark);
+            margin-bottom: 30px;
+            position: relative;
+            padding: 0 40px;
+        }
+
+        .philosophy-quote::before,
+        .philosophy-quote::after {
+            content: '"';
+            position: absolute;
+            font-size: 4rem;
+            color: var(--accent);
+            opacity: 0.3;
+        }
+
+        .philosophy-quote::before {
+            top: -20px;
+            left: 0;
+        }
+
+        .philosophy-quote::after {
+            bottom: -40px;
+            right: 0;
+        }
+
+        /* Current Work Section */
+        .current-work {
+            padding: 80px 20px;
+            background: var(--cream);
+        }
+
+        .work-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .work-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .work-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        .work-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .work-title {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .work-description {
+            color: var(--light);
+            line-height: 1.7;
+        }
+
+        /* Interactive Elements */
+        .reveal-text {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        .reveal-text::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--cream);
+            transform: translateX(-100%);
+            transition: transform 0.8s ease;
+        }
+
+        .reveal-text.revealed::after {
+            transform: translateX(100%);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes underlineReveal {
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: rotate(45deg) translateY(0);
+            }
+            40% {
+                transform: rotate(45deg) translateY(-10px);
+            }
+            60% {
+                transform: rotate(45deg) translateY(-5px);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-statement {
+                font-size: 1.8rem;
+            }
+
+            .timeline-line {
+                left: 20px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(odd) {
+                flex-direction: column;
+                align-items: flex-start;
+                padding-left: 60px;
+            }
+
+            .timeline-icon {
+                position: absolute;
+                left: -10px;
+            }
+
+            .timeline-content {
+                margin: 0;
+            }
+
+            .philosophy-quote {
+                font-size: 1.5rem;
+                padding: 0 20px;
+            }
+
+            .stat-value {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Floating elements for visual interest */
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            background: var(--gradient-1);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            background: var(--gradient-2);
+            top: 60%;
+            right: 5%;
+            animation-delay: 5s;
+        }
+
+        .shape-3 {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-3);
+            bottom: 10%;
+            left: 10%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title">About Mathew Moslow</h1>
+            <p class="hero-statement">
+                Mathew Moslow writes from the intersection of 
+                <span class="highlight">healing and honesty</span>, 
+                where the messy work of becoming human meets the courage to 
+                examine what we'd rather leave unexamined.
+            </p>
+            
+            <div class="scroll-indicator">
+                <span class="scroll-text">Discover the journey</span>
+                <div class="scroll-arrow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journey Timeline -->
+    <section class="journey-section">
+        <h2 class="section-title">The Journey</h2>
+        
+        <div class="journey-timeline">
+            <div class="timeline-line"></div>
+            
+            <div class="timeline-item">
+                <div class="timeline-icon">🏝️</div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Beaches of Jamaica</h3>
+                    <p class="timeline-location">Montego Bay</p>
+                    <p class="timeline-description">
+                        Growing up gay in Montego Bay taught him early that survival sometimes means performing, 
+                        but these formative years planted the seeds of authenticity that would later bloom into 
+                        his life's work.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-icon">🩺</div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Psychiatric Nursing</h3>
+                    <p class="timeline-location">Florida</p>
+                    <p class="timeline-description">
+                        A psychiatric nurse in training and a seeker by nature, Mathew's journey from the beaches 
+                        of Jamaica to the therapy rooms of Florida reads like a masterclass in intentional transformation.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-icon">💔</div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">The Pressure Cooker Method</h3>
+                    <p class="timeline-location">A Different Kind of Divorce</p>
+                    <p class="timeline-description">
+                        When his marriage to Aaron began to unravel, rather than following the traditional script 
+                        of bitter divorce proceedings, they chose what Mathew calls a "pressure cooker" method—confronting 
+                        pain head-on, with therapeutic support, to transform heartbreak into something resembling wisdom.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-icon">✍️</div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Author & Truth-Teller</h3>
+                    <p class="timeline-location">Present Day</p>
+                    <p class="timeline-description">
+                        Currently working on his second book, "Beyond The Reach Of Justice"—a thriller about a 
+                        disinherited nurse who turns to crime—Mathew demonstrates the range that comes from someone 
+                        unafraid to explore the darker corners of human motivation, whether in fiction or his own life.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <h2 class="section-title">By The Numbers</h2>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <span class="stat-value">1½</span>
+                <h3 class="stat-label">Books Written</h3>
+                <p class="stat-description">
+                    "A Novel Divorce" complete, "Beyond The Reach Of Justice" in progress
+                </p>
+                <div class="stat-progress">
+                    <div class="stat-progress-bar" style="--progress: 75%;"></div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-value">7/10</span>
+                <h3 class="stat-label">Stress Level</h3>
+                <p class="stat-description">
+                    Managed through radical honesty and therapeutic support
+                </p>
+                <div class="stat-progress">
+                    <div class="stat-progress-bar" style="--progress: 70%;"></div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-value">85%</span>
+                <h3 class="stat-label">Authenticity Rating</h3>
+                <p class="stat-description">
+                    The courage to show up as yourself, especially when it's uncomfortable
+                </p>
+                <div class="stat-progress">
+                    <div class="stat-progress-bar" style="--progress: 85%;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section class="philosophy-section">
+        <div class="philosophy-content">
+            <h2 class="section-title">Writing Philosophy</h2>
+            <p class="philosophy-quote">
+                His work now centers on the radical act of showing up authentically—especially 
+                when it's uncomfortable. His approach to life's most difficult moments is 
+                refreshingly unconventional.
+            </p>
+        </div>
+    </section>
+
+    <!-- Current Work -->
+    <section class="current-work">
+        <h2 class="section-title">Current Focus</h2>
+        
+        <div class="work-grid">
+            <div class="work-card">
+                <div class="work-icon">📚</div>
+                <h3 class="work-title">Writing</h3>
+                <p class="work-description">
+                    Crafting stories that explore the darker corners of human motivation, 
+                    from memoir to thriller, always with unflinching honesty.
+                </p>
+            </div>
+            
+            <div class="work-card">
+                <div class="work-icon">🧠</div>
+                <h3 class="work-title">Psychiatric Nursing</h3>
+                <p class="work-description">
+                    Training to help others navigate their own journeys through mental health, 
+                    bringing lived experience to clinical practice.
+                </p>
+            </div>
+            
+            <div class="work-card">
+                <div class="work-icon">🌱</div>
+                <h3 class="work-title">Personal Growth</h3>
+                <p class="work-description">
+                    Continuing the messy work of becoming human, one uncomfortable truth at a time, 
+                    and sharing that journey through writing.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Stagger animation for multiple items
+                    if (entry.target.classList.contains('stat-card')) {
+                        const cards = document.querySelectorAll('.stat-card');
+                        cards.forEach((card, index) => {
+                            setTimeout(() => {
+                                card.classList.add('visible');
+                            }, index * 200);
+                        });
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe timeline items
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Observe stat cards
+        document.querySelectorAll('.stat-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Smooth scroll for arrow indicator
+        document.querySelector('.scroll-indicator').addEventListener('click', () => {
+            document.querySelector('.journey-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        });
+
+        // Parallax effect for floating shapes
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const shapes = document.querySelectorAll('.floating-shape');
+            
+            shapes.forEach((shape, index) => {
+                const speed = 0.5 + (index * 0.1);
+                shape.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // Counter animation for stats
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                
+                if (element.dataset.type === 'fraction') {
+                    element.textContent = `${Math.floor(current)}/10`;
+                } else if (element.dataset.type === 'books') {
+                    element.textContent = current >= 1 ? '1½' : Math.floor(current);
+                } else {
+                    element.textContent = `${Math.floor(current)}%`;
+                }
+            }, 16);
+        }
+
+        // Trigger counter animation when stats become visible
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.dataset.animated) {
+                    const value = entry.target.querySelector('.stat-value');
+                    
+                    if (value.textContent === '7/10') {
+                        value.dataset.type = 'fraction';
+                        animateCounter(value, 7);
+                    } else if (value.textContent === '1½') {
+                        value.dataset.type = 'books';
+                        animateCounter(value, 1.5);
+                    } else if (value.textContent === '85%') {
+                        animateCounter(value, 85);
+                    }
+                    
+                    entry.target.dataset.animated = 'true';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-card').forEach(card => {
+            statObserver.observe(card);
+        });
+
+        // Reveal text animation
+        const revealElements = document.querySelectorAll('.reveal-text');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        revealElements.forEach(element => {
+            revealObserver.observe(element);
+        });
+    </script>
+</body>
+</html>
