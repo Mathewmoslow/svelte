@@ -1,11 +1,7 @@
 <script>
 	import { onDestroy, onMount, tick } from 'svelte';
-	import { books } from '$lib/data/books';
-	import { tracks } from '$lib/data/tracks';
 	import { visualJourney } from '$lib/data/visual-journey';
 
-	const featuredBook = books[0];
-	const highlightTracks = tracks.slice(0, 3);
 	const whispers = [
 		{ text: 'What if divorce could be generous?', speed: 0.25 },
 		{ text: 'Stories scored with their own soundtrack.', speed: 0.18 },
@@ -136,59 +132,14 @@
 			</div>
 			<div class="hero-card">
 				<p class="eyebrow">Mathew Moslow</p>
-				<h1>Stories that refuse to stay on the page.</h1>
+				<h1>Behind the Pages</h1>
 				<p>
-					Memoir, music and radical reinvention stitched into a single scroll. Take the long way through the
-					books, soundtrack and visual journey so every beat lands with intention.
+					A visual journey through the creative process—from the first spark of an idea to the studio sessions that shaped the stories. Follow along through the moments that don't make it into the final pages.
 				</p>
 				<div class="hero-actions">
 					<a href="/books">Explore the books</a>
-					<a class="ghost" href="/soundtrack">Listen to the soundtrack</a>
+					<a class="ghost" href="/about">Read the story</a>
 				</div>
-			</div>
-		</section>
-
-		<section class="book-focus" data-section="book">
-			<div class="book-art" style={`transform: translateY(${getSectionProgress('book') * -40}px);`}>
-				<img src={featuredBook.cover} alt={`${featuredBook.title} cover`} loading="lazy" />
-			</div>
-			<div class="book-copy">
-				<p class="eyebrow">{featuredBook.subtitle}</p>
-				<h2>{featuredBook.title}</h2>
-				{#each featuredBook.synopsis.slice(0, 2) as paragraph}
-					<p>{paragraph}</p>
-				{/each}
-				<div class="button-row">
-					<button type="button" onclick={() => (window.location.href = '/books')}>Get My Copy</button>
-					<button type="button" class="ghost" onclick={() => (window.location.href = '/soundtrack')}>
-						Have a Listen
-					</button>
-				</div>
-			</div>
-		</section>
-
-		<section class="soundtrack" data-section="soundtrack">
-			<div class="soundtrack-intro">
-				<p class="eyebrow">How Novel!</p>
-				<h2>I wrote the memoir and then I scored it.</h2>
-				<p>
-					Full songs, wobbly takes, bloopers and sighs—every track is a chapter we couldn’t fit on the page.
-					Scroll slow, queue a song and linger for a beat.
-				</p>
-			</div>
-			<div class="track-grid">
-				{#each highlightTracks as track}
-					<article
-						class="track-card"
-						style={`transform: translateY(${(1 - getSectionProgress('soundtrack')) * 40}px); opacity: ${0.4 + getSectionProgress('soundtrack') * 0.6};`}
-					>
-						<span class="track-number">{track.number}</span>
-						<div class="track-body">
-							<h3>{track.title}</h3>
-							<p>{track.description}</p>
-						</div>
-					</article>
-				{/each}
 			</div>
 		</section>
 
@@ -324,8 +275,7 @@
 	}
 
 	.hero-actions a,
-	.button-row a,
-	.button-row button {
+	.button-row a {
 		border: 1px solid rgba(124, 168, 138, 0.8);
 		padding: 0.85rem 1.8rem;
 		border-radius: 999px;
@@ -340,94 +290,8 @@
 	}
 
 	.hero-actions a:hover,
-	.button-row a:hover,
-	.button-row button:hover {
+	.button-row a:hover {
 		background: rgba(124, 168, 138, 0.35);
-	}
-
-	.book-focus {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-		gap: clamp(2rem, 6vw, 5rem);
-		align-items: center;
-		background: radial-gradient(circle at 30% 20%, rgba(68, 103, 78, 0.25), transparent 50%),
-			linear-gradient(135deg, #050505, #0f0f0f);
-	}
-
-	.book-art {
-		text-align: center;
-	}
-
-	.book-art img {
-		width: min(320px, 70%);
-		box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-		border-radius: 18px;
-	}
-
-	.book-copy h2 {
-		font-size: clamp(2rem, 4vw, 3.3rem);
-		margin-bottom: 1.5rem;
-	}
-
-	.book-copy p {
-		font-size: 1.05rem;
-		color: rgba(247, 240, 227, 0.85);
-		line-height: 1.7;
-		margin-bottom: 1rem;
-	}
-
-	.button-row {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem;
-		margin-top: 2rem;
-	}
-
-	.button-row .ghost,
-	.hero-actions .ghost,
-	.button-row button.ghost {
-		background: transparent;
-		color: rgba(247, 240, 227, 0.85);
-	}
-
-	.soundtrack {
-		background: radial-gradient(circle at right, rgba(132, 179, 144, 0.25), transparent 55%), #070c09;
-	}
-
-	.soundtrack-intro h2 {
-		font-size: clamp(2rem, 4vw, 3.5rem);
-		margin-bottom: 1rem;
-	}
-
-	.track-grid {
-		margin-top: 3rem;
-		display: grid;
-		gap: 1.5rem;
-	}
-
-	.track-card {
-		padding: 1.5rem;
-		border-radius: 24px;
-		background: rgba(0, 0, 0, 0.55);
-		border: 1px solid rgba(124, 168, 138, 0.2);
-		box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-		transition: transform 0.4s ease;
-	}
-
-	.track-card:hover {
-		transform: translateY(-6px);
-	}
-
-	.track-number {
-		font-family: 'Adventures Unlimited', 'Playfair Display', serif;
-		font-size: 1.2rem;
-		color: rgba(124, 168, 138, 0.9);
-	}
-
-	.track-card h3 {
-		margin-top: 0.5rem;
-		margin-bottom: 0.5rem;
-		font-size: 1.6rem;
 	}
 
 	.timeline {
