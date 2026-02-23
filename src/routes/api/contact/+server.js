@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { createSupabaseClient } from '$lib/server/supabase';
+import { getDb } from '$lib/server/db';
 
 const requirements = {
 	contact: ['name', 'email', 'subject', 'message'],
@@ -24,30 +24,35 @@ export async function POST({ request }) {
 		}
 	}
 
-	const supabase = createSupabaseClient();
-	let supabaseError = null;
+	const sql = getDb();
+	let dbError = null;
 
-	if (supabase) {
-		const { error } = await supabase.from('messages').insert({
-			type,
-			name: payload.name.trim(),
-			email: payload.email.trim(),
-			subject: payload.subject?.trim() || null,
-			message: payload.message?.trim() || null,
-			book_title: payload.bookTitle?.trim() || null,
-			format_preference: payload.format?.trim() || null,
-			created_at: new Date().toISOString()
-		});
-
-		supabaseError = error?.message ?? null;
+	if (sql) {
+		try {
+			await sql`
+				INSERT INTO messages (type, name, email, subject, message, book_title, format_preference, created_at)
+				VALUES (
+					${type},
+					${payload.name.trim()},
+					${payload.email.trim()},
+					${payload.subject?.trim() || null},
+					${payload.message?.trim() || null},
+					${payload.bookTitle?.trim() || null},
+					${payload.format?.trim() || null},
+					${new Date().toISOString()}
+				)
+			`;
+		} catch (err) {
+			dbError = err.message;
+		}
 	}
 
-	const stored = supabase ? !supabaseError : false;
+	const stored = sql ? !dbError : false;
 	const responseBody = {
 		success: true,
 		stored,
-		warning: supabase && supabaseError ? 'Stored locally only. Supabase insert failed.' : undefined
+		warning: sql && dbError ? 'Database insert failed.' : undefined
 	};
 
-	return json(responseBody, { status: supabaseError ? 202 : 200 });
+	return json(responseBody, { status: dbError ? 202 : 200 });
 }

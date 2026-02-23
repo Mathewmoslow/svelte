@@ -1,15 +1,20 @@
 <script>
 	import { fade } from 'svelte/transition';
 	import { visualJourney } from '$lib/data/visual-journey';
+	export let standalone = true;
 </script>
 
-<section class="journey-section stand-alone" id="visual-journey" data-bg="#101512">
+<section class="journey-section" class:stand-alone={standalone} id="visual-journey" data-bg="#101512">
 	<div class="journey-container">
-		<h2 class="section-title visible" transition:fade={{ duration: 400 }}>The Visual Journey</h2>
+		<h2 class="section-title visible" data-animate="title" transition:fade={{ duration: 400 }}>The Visual Journey</h2>
 
 		{#each visualJourney as stop, index}
-			<div class={`journey-section-timeline visible ${stop.side}`} transition:fade={{ duration: 350, delay: index * 120 }}>
-				<div class="journey-number">{stop.number}</div>
+			<div
+				class={`journey-section-timeline visible ${stop.side}`}
+				data-animate="timeline"
+				transition:fade={{ duration: 350, delay: index * 120 }}
+			>
+				<div class="journey-number" data-animate-child="number" data-animate-delay="120">{stop.number}</div>
 				<div class="journey-content-area">
 					{#if stop.side === 'left'}
 						<div class="journey-image-wrapper">

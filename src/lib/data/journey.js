@@ -4,7 +4,7 @@ export const journeyHighlights = [
         title: 'Jamaican Roots',
         location: 'MONTEGO BAY',
         description:
-            "A psychiatric nurse in training and a seeker by nature, Mathew's journey from the beaches of Jamaica to the therapy rooms of Florida reads like a masterclass in intentional transformation. Growing up gay in Montego Bay taught him early that survival sometimes means performing, but his work now centers on the radical act of showing up authentically—especially when it's uncomfortable.",
+            "I grew up gay in Montego Bay. That sentence is simple. Living it was not. I learned to read rooms before I learned to read books. I learned what to hide, who to become, how to make myself small enough to survive a place that did not have space for what I was.",
         side: 'left'
     },
     {
@@ -12,7 +12,7 @@ export const journeyHighlights = [
         title: 'The Pressure Cooker Method',
         location: 'DIVORCE & TRANSFORMATION',
         description:
-            'His approach to life\'s most difficult moments is refreshingly unconventional. When his marriage to Aaron began to unravel, rather than following the traditional script of bitter divorce proceedings, they chose what Mathew calls a "pressure cooker" method—confronting pain head-on, with therapeutic support, to transform heartbreak into something resembling wisdom. The result wasn\'t just the preservation of their friendship, but a blueprint for how love can evolve when we stop trying to control its form.',
+            "When Aaron and I decided to end our marriage, we did not follow the script. No lawyers in separate rooms. No weaponized silence. We sat across from each other with a therapist and we said the things married people are not supposed to say out loud. We called it the pressure cooker method. It was brutal. It was clarifying. And when it was over, we were still friends. I did not expect that.",
         side: 'right'
     },
     {
@@ -20,7 +20,7 @@ export const journeyHighlights = [
         title: 'A Novel Divorce',
         location: 'MEMOIR',
         description:
-            "Mathew's memoir, A Novel Divorce, chronicles this journey with the precision of someone trained to observe human behavior and the vulnerability of someone willing to dissect his own. He writes about psilocybin ceremonies in Costa Rican jungles with the same unflinching honesty he brings to examining his failures as a partner, his struggles with anxiety, and his gradual learning to love without the armor of performance.",
+            "I wrote a memoir about my divorce and then I scored it with original music. The writing part took years. The singing part nearly broke me. Both required the same thing: sitting with something uncomfortable long enough to find the shape of it, and then handing it to a stranger.",
         side: 'left'
     },
     {
@@ -28,7 +28,7 @@ export const journeyHighlights = [
         title: 'Beyond The Reach Of Justice',
         location: 'THRILLER IN PROGRESS',
         description:
-            'Currently working on his second book, "Beyond The Reach Of Justice"—a thriller about a disinherited nurse who turns to crime—Mathew demonstrates the range that comes from someone unafraid to explore the darker corners of human motivation, whether in fiction or his own life.',
+            "My second book is a thriller set in Jamaica. A disinherited nurse. Colonial law. A revenge plot that unfolds over twelve months. People ask how I jumped from memoir to crime fiction. I tell them I have always been interested in what people do when they run out of acceptable options.",
         side: 'right'
     },
     {
@@ -36,7 +36,7 @@ export const journeyHighlights = [
         title: 'Academic Pursuits',
         location: 'PSYCHOLOGY & HEALING',
         description:
-            "His academic interests in developmental and behavioral psychology and alternative therapeutic modalities aren't abstract pursuits but lived experiments in understanding how people change, heal, and grow. He's as likely to reference Brené Brown's research on vulnerability as he is to describe the practical effects of ayahuasca on trauma processing, approaching both with the curiosity of someone for whom transformation is a daily practice.",
+            "I study developmental and behavioral psychology. I have participated in ayahuasca ceremonies and psilocybin-assisted sessions. I have sat in lecture halls and in sweat lodges. I do not rank these experiences. They are all part of the same question: how do people change, and what does it cost them?",
         side: 'left'
     },
     {
@@ -44,7 +44,7 @@ export const journeyHighlights = [
         title: 'Living Fully',
         location: 'PRESENT DAY • FLORIDA',
         description:
-            "These days, Mathew lives in Florida with his dog Amber—his 'easy answer' to what brings him joy—and continues the work of showing up fully for his life. His writing, whether memoir or fiction, carries the hard-won wisdom of someone who learned that the stories we tell ourselves can either trap us or set us free, and that sometimes the most radical thing we can do is tell the truth about who we've been in service of who we're becoming.",
+            "I live in Florida with my dog Amber. I am finishing my nursing degree. I am writing another book. I am trying to be the kind of person who does not need a performance to feel safe in a room. Some days I succeed. Most days I am still practicing.",
         side: 'right'
     }
 ];

@@ -5,13 +5,20 @@
 	import ReserveModal from './ReserveModal.svelte';
 	import { books } from '$lib/data/books';
 
+	export let standalone = true;
+
 	let activeCassette = '';
+	let cassetteAutoplayToken = 0;
 	let peekBook = null;
 	let reserveOpen = false;
 	let reserveBookTitle = '';
 
 	function toggleCassette(bookId) {
-		activeCassette = activeCassette === bookId ? '' : bookId;
+		const nextCassette = activeCassette === bookId ? '' : bookId;
+		activeCassette = nextCassette;
+		if (nextCassette) {
+			cassetteAutoplayToken += 1;
+		}
 	}
 
 	function openPeek(book) {
@@ -24,20 +31,16 @@
 	}
 </script>
 
-<section class="books-section stand-alone" id="books" data-bg="#0b0b0b">
+<section class="books-section" class:stand-alone={standalone} id="books" data-bg="#0b0b0b">
 	<div class="books-container">
-		<h2 class="section-title visible" transition:fade={{ duration: 400 }}>Books</h2>
+		<h2 class="section-title visible" data-animate="title">Books</h2>
 
 		{#each books as book, index (book.id)}
 			{@const isLeft = index % 2 === 0}
-			<div class={`book-section-timeline visible ${isLeft ? 'left' : 'right'}`}>
-				{#if isLeft}
-					<div class="book-number visible">{book.number}</div>
-				{/if}
-
+			<div class={`book-section-timeline visible ${isLeft ? 'left' : 'right'}`} data-animate="timeline">
 				<div class="book-content-area" transition:fade={{ duration: 300, delay: index * 150 }}>
 					{#if isLeft}
-						<div class="book-cover-wrapper visible">
+						<div class="book-cover-wrapper visible" data-animate-child="cover">
 							<img src={book.cover} alt={`${book.title} Book Cover`} loading="lazy" />
 						</div>
 					{/if}
@@ -78,19 +81,19 @@
 							{/if}
 						</div>
 
-						<CassettePlayer book={book} open={activeCassette === book.id} />
+						<CassettePlayer
+							book={book}
+							open={activeCassette === book.id}
+							autoplayKey={activeCassette === book.id ? cassetteAutoplayToken : 0}
+						/>
 					</div>
 
 					{#if !isLeft}
-						<div class="book-cover-wrapper visible">
+						<div class="book-cover-wrapper visible" data-animate-child="cover">
 							<img src={book.cover} alt={`${book.title} Book Cover`} loading="lazy" />
 						</div>
 					{/if}
 				</div>
-
-				{#if !isLeft}
-					<div class="book-number visible">{book.number}</div>
-				{/if}
 			</div>
 		{/each}
 	</div>

@@ -2,8 +2,17 @@
 	import { fade } from 'svelte/transition';
 	import { tracks } from '$lib/data/tracks';
 
+	export let standalone = true;
+
 	let currentTrackId = '';
 	let audioPlayer;
+	let activePlatform = 'spotify';
+
+	const platforms = [
+		{ id: 'spotify', label: 'Spotify', icon: '&#9679;', src: 'https://open.spotify.com/embed/artist/01NenrwmvXUVYyRz03WU50?utm_source=generator&theme=0' },
+		{ id: 'apple', label: 'Apple Music', icon: '&#9834;', src: 'https://embed.music.apple.com/us/album/feels-like-goodbye-ep/1860117978' },
+		{ id: 'youtube', label: 'YouTube Music', icon: '&#9654;', src: 'https://www.youtube.com/embed?listType=playlist&list=OLAK5uy_kJEVF2fwe2dMkBcVFtGuXnLmW4pDHA_Mc&color=white' }
+	];
 
 	function togglePlay(track) {
 		if (!audioPlayer) return;
@@ -28,7 +37,7 @@
 	}
 </script>
 
-<section class="soundtrack-section stand-alone" id="soundtrack" data-bg="#101512">
+<section class="soundtrack-section" class:stand-alone={standalone} id="soundtrack" data-bg="#101512">
 	<div class="vinyl-decoration vinyl-1" aria-hidden="true"></div>
 	<div class="vinyl-decoration vinyl-2" aria-hidden="true"></div>
 	<div class="vinyl-decoration vinyl-3" aria-hidden="true"></div>
@@ -80,6 +89,39 @@
 					</div>
 				</div>
 			{/each}
+		</div>
+
+		<div class="streaming-player">
+			<h3 class="streaming-title">Stream the full EP</h3>
+			<p class="streaming-subtitle">Listen on your preferred platform</p>
+			<div class="platform-tabs">
+				{#each platforms as platform}
+					<button
+						type="button"
+						class={`platform-tab ${activePlatform === platform.id ? 'active' : ''}`}
+						onclick={() => (activePlatform = platform.id)}
+					>
+						<span class="platform-icon">{@html platform.icon}</span>
+						{platform.label}
+					</button>
+				{/each}
+			</div>
+			<div class="player-embed">
+				{#each platforms as platform}
+					{#if activePlatform === platform.id}
+						<iframe
+							title={`${platform.label} player`}
+							src={platform.src}
+							width="100%"
+							height={platform.id === 'youtube' ? '360' : '352'}
+							frameborder="0"
+							allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+							loading="lazy"
+							style={platform.id === 'apple' ? 'border-radius: 10px;' : 'border-radius: 12px;'}
+						></iframe>
+					{/if}
+				{/each}
+			</div>
 		</div>
 
 		<audio bind:this={audioPlayer} onended={handleEnded} style="display: none;" preload="none"></audio>

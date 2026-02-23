@@ -1,14 +1,17 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
-	import { page } from '$app/stores';
-	import { afterNavigate } from '$app/navigation';
-	import favicon from '$lib/assets/favicon.svg';
-	import { floatingQuotes } from '$lib/data/quotes';
+	import { base } from '$app/paths';
+import { page } from '$app/stores';
+import { afterNavigate } from '$app/navigation';
+import favicon from '$lib/assets/favicon.svg';
+import { floatingQuotes } from '$lib/data/quotes';
+import { heavyScroll } from '$lib/actions/heavyScroll';
 
-	let menuOpen = false;
-	let quotes = [];
-	let scrollY = 0;
-	let windowHeight = 1;
+let menuOpen = false;
+let quotes = [];
+let scrollY = 0;
+let windowHeight = 1;
+let cleanupEnhancements;
 
 	const backgrounds = {
 		'/': '#0b0b0b',
@@ -99,13 +102,189 @@
 		windowHeight = window.innerHeight || 1;
 	}
 
+	function setupEnhancements() {
+		if (typeof window === 'undefined') return () => {};
+
+		const htmlEl = document.documentElement;
+		const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const prefersReducedMotion = reduceMotionQuery.matches;
+
+		if (prefersReducedMotion) {
+			htmlEl.classList.add('no-anim');
+			return () => {};
+		}
+
+		htmlEl.classList.remove('no-anim');
+
+		const stage = document.getElementById('stage-bg');
+		const heroOverlay = document.getElementById('hero-overlay');
+		const panels = Array.from(document.querySelectorAll('section[id]'));
+		const heroLayers = Array.from(document.querySelectorAll('.section-separator .separator-layer'));
+		const bookSections = Array.from(document.querySelectorAll('.book-section-timeline'));
+		const animatedNodes = Array.from(document.querySelectorAll('[data-animate]'));
+
+		panels.forEach((panel) => panel.setAttribute('data-soft-panel', ''));
+
+		const resetChildVisibility = (node) => {
+			if (node.dataset.animate === 'timeline') {
+				node.querySelectorAll('[data-animate-child]').forEach((child) => {
+					child.classList.remove('visible');
+				});
+			}
+		};
+
+		animatedNodes.forEach((node) => {
+			node.classList.remove('visible');
+			resetChildVisibility(node);
+		});
+
+		const addVisibleClass = (node, delay = 0) => {
+			if (!node) return;
+			if (delay > 0) {
+				setTimeout(() => node.classList.add('visible'), delay);
+			} else {
+				node.classList.add('visible');
+			}
+		};
+
+		const revealObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (!entry.isIntersecting) return;
+
+					const target = entry.target;
+					const delay = Number(target.dataset.animateDelay || 0);
+
+					addVisibleClass(target, delay);
+
+					if (target.dataset.animate === 'timeline') {
+						target.querySelectorAll('[data-animate-child]').forEach((child) => {
+							const childDelay = Number(child.dataset.animateDelay || 0);
+							addVisibleClass(child, childDelay);
+						});
+					}
+
+					revealObserver.unobserve(target);
+				});
+			},
+			{
+				threshold: 0.25,
+				rootMargin: '0px 0px -100px 0px'
+			}
+		);
+
+		animatedNodes.forEach((node) => revealObserver.observe(node));
+
+		const getPanelColor = (panel) =>
+			panel?.getAttribute('data-bg') || window.getComputedStyle(panel).backgroundColor || '#0b0b0b';
+
+		if (panels[0] && stage) {
+			stage.style.backgroundColor = getPanelColor(panels[0]);
+		}
+
+		const backgroundObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (!entry.isIntersecting) return;
+					if (!stage) return;
+					stage.style.backgroundColor = getPanelColor(entry.target);
+				});
+			},
+			{
+				threshold: 0.45,
+				rootMargin: '0px 0px -20% 0px'
+			}
+		);
+
+		panels.forEach((panel) => backgroundObserver.observe(panel));
+
+		let rafId;
+		const HEAVY_FACTOR = 0.25;
+
+		const applyScrollEffects = () => {
+			const actualScroll = window.scrollY || 0;
+			const viewportHeight = window.innerHeight || 1;
+
+			const perceivedScroll = actualScroll * HEAVY_FACTOR;
+
+			heroLayers.forEach((layer, index) => {
+				const speed = 0.35 + index * 0.2;
+				layer.style.transform = `translate3d(0, ${perceivedScroll * speed}px, 0)`;
+			});
+
+			if (heroOverlay) {
+			const intensity = Math.min(perceivedScroll / (viewportHeight * 0.85), 1);
+			heroOverlay.style.background = `rgba(0, 0, 0, ${0.15 * intensity})`;
+			}
+
+			bookSections.forEach((section, index) => {
+				const rect = section.getBoundingClientRect();
+				if (rect.bottom < 0 || rect.top > viewportHeight) {
+					section.style.transform = '';
+					return;
+				}
+				const pressure = index % 2 === 0 ? 0.15 : -0.15;
+				const offset = (viewportHeight - rect.top) * pressure * HEAVY_FACTOR;
+				section.style.transform = `translateY(${offset}px)`;
+			});
+
+			rafId = requestAnimationFrame(applyScrollEffects);
+		};
+
+		const requestUpdate = () => {
+			cancelAnimationFrame(rafId);
+			rafId = requestAnimationFrame(applyScrollEffects);
+		};
+
+		rafId = requestAnimationFrame(applyScrollEffects);
+
+		window.addEventListener('scroll', requestUpdate, { passive: true });
+		window.addEventListener('resize', requestUpdate);
+
+		const handleReduceMotionChange = (event) => {
+			if (event.matches) {
+				revealObserver.disconnect();
+				backgroundObserver.disconnect();
+				window.removeEventListener('scroll', handleMotion);
+				window.removeEventListener('resize', handleMotion);
+			}
+		};
+
+		reduceMotionQuery.addEventListener('change', handleReduceMotionChange);
+
+		return () => {
+			revealObserver.disconnect();
+			backgroundObserver.disconnect();
+			window.removeEventListener('scroll', requestUpdate);
+			window.removeEventListener('resize', requestUpdate);
+			reduceMotionQuery.removeEventListener('change', handleReduceMotionChange);
+			cancelAnimationFrame(rafId);
+			bookSections.forEach((section) => {
+				section.style.transform = '';
+			});
+			heroLayers.forEach((layer) => {
+				layer.style.transform = '';
+			});
+			if (heroOverlay) {
+				heroOverlay.style.background = 'rgba(0, 0, 0, 0)';
+			}
+		};
+	}
+
 	onMount(() => {
+		// Scroll to top on initial load (prevents mobile landing mid-page)
+		if (!window.location.hash) {
+			window.scrollTo(0, 0);
+		}
+
 		windowHeight = window.innerHeight || 1;
 		regenerateQuotes();
 		handleScroll();
 
 		window.addEventListener('scroll', handleScroll, { passive: true });
 		window.addEventListener('resize', handleResize);
+
+		cleanupEnhancements = setupEnhancements();
 
 		updateRouteClass(route);
 
@@ -115,11 +294,14 @@
 			closeMenu();
 			regenerateQuotes();
 			handleScroll();
+			cleanupEnhancements?.();
+			cleanupEnhancements = setupEnhancements();
 		});
 
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
 			window.removeEventListener('resize', handleResize);
+			cleanupEnhancements?.();
 		};
 	});
 
@@ -127,6 +309,7 @@
 		if (typeof document !== 'undefined') {
 			delete document.body.dataset.route;
 		}
+		cleanupEnhancements?.();
 	});
 </script>
 
@@ -152,7 +335,7 @@
 
 <header class="header" data-menu-open={menuOpen}>
 	<nav class="nav-container">
-		<a href="/" class="logo" onclick={closeMenu}>Mathew Moslow</a>
+		<a href={`${base}/`} class="logo" onclick={closeMenu}>Mathew Moslow</a>
 		<button class="hamburger" class:active={menuOpen} onclick={toggleMenu} aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={menuOpen}>
 			<span></span>
 			<span></span>
@@ -160,19 +343,19 @@
 		</button>
 		<ul class="nav-links" class:active={menuOpen} id="navLinks">
 			<li>
-				<a href="/books" class:active={route?.startsWith('/books')} onclick={closeMenu}>Books</a>
+				<a href={`${base}/#books`} onclick={closeMenu}>Books</a>
 			</li>
 			<li>
-				<a href="/soundtrack" class:active={route?.startsWith('/soundtrack')} onclick={closeMenu}>Soundtrack</a>
+				<a href={`${base}/#soundtrack`} onclick={closeMenu}>Soundtrack</a>
 			</li>
 			<li>
-				<a href="/about" class:active={route?.startsWith('/about')} onclick={closeMenu}>About</a>
+				<a href={`${base}/#about`} onclick={closeMenu}>About</a>
 			</li>
 			<li>
-				<a href="/gallery" class:active={route?.startsWith('/gallery')} onclick={closeMenu}>Journey</a>
+				<a href={`${base}/#visual-journey`} onclick={closeMenu}>Journey</a>
 			</li>
 			<li>
-				<a href="/contact" class:active={route?.startsWith('/contact')} onclick={closeMenu}>Contact</a>
+				<a href={`${base}/#contact`} onclick={closeMenu}>Contact</a>
 			</li>
 		</ul>
 	</nav>
@@ -188,6 +371,6 @@
 	aria-hidden={!menuOpen}
 ></div>
 
-<main class="page-shell">
+<main class="page-shell" use:heavyScroll>
 	<slot />
 </main>

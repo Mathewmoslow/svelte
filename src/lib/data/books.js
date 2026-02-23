@@ -19,7 +19,7 @@ export const books = [
         cover: '/images/v1@3x.png',
         synopsis: toParagraphs(divorceSynopsisRaw).slice(0, 2),
         cta: {
-            primary: { label: 'Get My Copy', href: '#' },
+            primary: { label: 'Get My Copy', href: 'https://store.bookbaby.com/book/a-novel-divorce' },
             secondary: { label: 'Sneak a Peek', action: 'peek' },
             tertiary: { label: 'Have a Listen', action: 'cassette' }
         },

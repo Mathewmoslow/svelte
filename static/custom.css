@@ -26,7 +26,10 @@
             height: 100%;
             overflow-x: hidden;
             max-width: 100%;
+            scroll-behavior: auto;
         }
+
+        /* Mobile: handled at bottom of file */
 
         body {
             font-family: 'Garamond', 'Garamond', 'Garamond', serif;
@@ -272,6 +275,26 @@
             .about-section {
                 padding: 60px 20px;
             }
+
+            .hero.home-hero {
+                align-items: center;
+                justify-content: center;
+                padding: 0 20px 80px;
+            }
+
+            .hero.home-hero .hero-content {
+                margin: 0;
+                text-align: center;
+            }
+
+            .hero.home-hero h1,
+            .hero.home-hero p {
+                text-align: center;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
         }
 
         .hero-content {
@@ -331,13 +354,12 @@
             /* Base styles - will be overridden by inline styles based on depth */
         }
 
-        /* Books Section - Typography-Heavy Like About Section */
+        /* Books Section - Glass panels over persistent hero */
         .books-section {
-            padding: 120px 20px 40px;
+            padding: clamp(80px, 12vh, 140px) 20px 40px;
             background: transparent;
             position: relative;
-            overflow: hidden;
-            min-height: 100vh;
+            overflow: visible;
         }
 
         .books-container {
@@ -349,12 +371,12 @@
 
         .section-title {
             font-family: 'La Roue', 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-size: clamp(2.4rem, 4.6vw, 4rem);
             font-weight: 300;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             color: #e8d5b7;
-            margin-bottom: 120px;
+            margin-bottom: clamp(60px, 10vh, 100px);
             text-align: center;
             transition: transform 0.8s ease-out, opacity 0.8s ease-out;
             opacity: 0;
@@ -366,86 +388,57 @@
             transform: translateY(0);
         }
 
-        /* Book Sections - Alternating Left/Right Like About Timeline */
         .book-section-timeline {
             position: relative;
-            margin-bottom: 150px;
-            display: flex;
-            align-items: center;
-            min-height: 400px;
+            margin-bottom: clamp(60px, 11vh, 140px);
+            padding: clamp(28px, 4vw, 52px);
+            border-radius: 32px;
+            backdrop-filter: blur(18px);
+            background: rgba(7, 7, 7, 0.7);
+            border: 1px solid rgba(232, 213, 183, 0.12);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.55);
             will-change: transform;
-            transition: transform 0.1s linear;
         }
 
-        /* Left side layout */
-        .book-section-timeline.left {
-            justify-content: flex-start;
-        }
-
-        .book-section-timeline.left .book-number {
-            order: 1;
-            margin-right: 60px;
-        }
-
-        .book-section-timeline.left .book-content-area {
-            order: 2;
-            text-align: left;
-            max-width: 800px;
-        }
-
-        /* Right side layout */
-        .book-section-timeline.right {
-            justify-content: flex-end;
-        }
-
-        .book-section-timeline.right .book-number {
-            order: 2;
-            margin-left: 60px;
-        }
-
-        .book-section-timeline.right .book-content-area {
-            order: 1;
-            text-align: right;
-            max-width: 800px;
-        }
-
-        .book-number {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #4a7c59;
-            min-width: 120px;
-            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
-            opacity: 0;
-            transform: scale(0.5);
-            font-family: 'Playfair Display', serif;
-        }
-
-        .book-number.visible {
-            opacity: 1;
-            transform: scale(1);
+        .book-section-timeline::after {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border-radius: 24px;
+            border: 1px solid rgba(74, 124, 89, 0.08);
+            pointer-events: none;
         }
 
         .book-content-area {
-            display: flex;
-            gap: 40px;
-            align-items: center;
+            display: grid;
+            grid-template-columns: minmax(240px, 32vw) minmax(0, 1fr);
+            gap: clamp(24px, 4vw, 56px);
+            align-items: stretch;
+        }
+
+        .book-section-timeline.right .book-content-area {
+            grid-template-columns: minmax(0, 1fr) minmax(240px, 32vw);
         }
 
         .book-cover-wrapper {
-            flex: 0 0 280px;
             position: relative;
+            border-radius: 28px;
+            border: 1px solid rgba(232, 213, 183, 0.2);
+            background: linear-gradient(135deg, rgba(232,213,183,0.08), rgba(0,0,0,0.5));
             overflow: hidden;
-            background: #f8f8f8;
-            border-radius: 12px;
-            border: 3px solid #4a7c59;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
             transition: transform 0.8s ease-out, opacity 0.8s ease-out;
             opacity: 0;
             transform: translateY(30px);
-            height: 420px;
+            aspect-ratio: 2 / 3;
+            width: 100%;
+            max-width: clamp(220px, 32vw, 360px);
+            align-self: center;
+            justify-self: center;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: clamp(12px, 2vw, 20px);
         }
 
         .book-cover-wrapper.visible {
@@ -456,28 +449,30 @@
         .book-cover-wrapper img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            object-position: center;
-            transition: transform 0.1s linear;
-            opacity: 1;
+            object-fit: contain;
+            display: block;
         }
 
         .book-content {
-            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
+            padding: clamp(20px, 3vw, 40px);
+            border-radius: 24px;
+            background: rgba(4, 4, 4, 0.7);
+            border: 1px solid rgba(232, 213, 183, 0.1);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
         }
 
         .book-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
             color: #e8d5b7;
             margin-bottom: 12px;
             font-weight: 300;
             font-style: italic;
             letter-spacing: 0.01em;
-            transition: transform 0.8s ease-out 0.3s, opacity 0.8s ease-out 0.3s;
+            transition: transform 0.8s ease-out 0.2s, opacity 0.8s ease-out 0.2s;
             opacity: 0;
             transform: translateY(20px);
         }
@@ -488,13 +483,13 @@
         }
 
         .book-subtitle {
-            color: rgba(232, 213, 183, 0.6);
-            font-size: 0.75rem;
-            margin-bottom: 20px;
-            font-weight: 400;
+            color: rgba(232, 213, 183, 0.65);
+            font-size: 0.8rem;
+            margin-bottom: 16px;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
-            transition: transform 0.8s ease-out 0.4s, opacity 0.8s ease-out 0.4s;
+            letter-spacing: 0.18em;
+            transition: transform 0.8s ease-out 0.3s, opacity 0.8s ease-out 0.3s;
             opacity: 0;
             transform: translateY(20px);
         }
@@ -506,10 +501,10 @@
 
         .book-synopsis {
             line-height: 1.7;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.78);
             font-size: 1rem;
-            margin-bottom: 20px;
-            transition: transform 0.8s ease-out 0.5s, opacity 0.8s ease-out 0.5s;
+            margin-bottom: 10px;
+            transition: transform 0.8s ease-out 0.4s, opacity 0.8s ease-out 0.4s;
             opacity: 0;
             transform: translateY(20px);
         }
@@ -523,7 +518,7 @@
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
-            transition: transform 0.8s ease-out 0.6s, opacity 0.8s ease-out 0.6s;
+            transition: transform 0.8s ease-out 0.5s, opacity 0.8s ease-out 0.5s;
             opacity: 0;
             transform: translateY(20px);
         }
@@ -533,37 +528,24 @@
             transform: translateY(0);
         }
 
-        @media (max-width: 768px) {
-            .book-meta {
-                flex-direction: column;
-                gap: 12px;
-                width: 100%;
-            }
-
-            .book-action {
-                width: 100%;
-                text-align: center;
-                padding: 16px 25px;
-                font-size: 1.1rem;
-            }
-
+        @media (max-width: 900px) {
             .book-content-area {
-                flex-direction: column;
-                gap: 30px;
+                grid-template-columns: 1fr;
             }
 
             .book-cover-wrapper {
-                flex: 0 0 auto;
-                width: 100%;
-                max-width: 300px;
-                height: auto;
-                aspect-ratio: 2/3;
+                min-height: auto;
+                aspect-ratio: 2 / 3;
+            }
+
+            .book-section-timeline.right .book-content-area {
+                grid-template-columns: 1fr;
             }
         }
 
         .book-action {
             display: inline-block;
-            padding: 12px 25px;
+            padding: 12px 26px;
             background: #4a7c59;
             color: white;
             text-decoration: none;
@@ -571,7 +553,7 @@
             border: none;
             cursor: pointer;
             font-size: 1rem;
-            border-radius: 4px;
+            border-radius: 999px;
             font-family: 'Garamond', 'Garamond', serif;
         }
 
@@ -579,7 +561,7 @@
             background: #e8d5b7;
             color: #1a1a1a;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(74, 124, 89, 0.3);
+            box-shadow: 0 6px 16px rgba(74, 124, 89, 0.35);
         }
 
         .book-action.secondary {
@@ -597,13 +579,24 @@
             background: transparent;
             color: #e8d5b7;
             border: 2px solid #e8d5b7;
-            font-size: 0.9rem;
-            padding: 10px 20px;
+            font-size: 0.95rem;
         }
 
         .book-action.tertiary:hover {
             background: #e8d5b7;
             color: #1a1a1a;
+        }
+
+        @media (max-width: 600px) {
+            .book-meta {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .book-action {
+                width: 100%;
+                text-align: center;
+            }
         }
 
         /* Cassette Tape Audio Player */
@@ -614,11 +607,13 @@
             overflow: hidden;
             transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
             opacity: 0;
+            pointer-events: none;
         }
 
         .cassette-container.active {
-            max-height: 500px;
+            max-height: 520px;
             opacity: 1;
+            pointer-events: auto;
         }
 
         .cassette-tape {
@@ -777,6 +772,27 @@
             overflow: hidden;
         }
 
+        .soundtrack-section::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(16, 21, 18, 0.88);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+            pointer-events: none;
+        }
+
+        .soundtrack-section.stand-alone::after,
+        .soundtrack-section:not(.stand-alone)::after {
+            opacity: 1;
+        }
+
+        .soundtrack-section > * {
+            position: relative;
+            z-index: 2;
+        }
+
         .soundtrack-section::before {
             content: '';
             position: absolute;
@@ -810,30 +826,61 @@
 
         .soundtrack-main-title {
             font-family: 'Garamond', 'Garamond', serif;
-            font-size: clamp(1rem, 1.5vw, 1.2rem);
-            color: rgba(232, 213, 183, 0.4);
-            margin-bottom: 5px;
+            font-size: clamp(1rem, 1.6vw, 1.25rem);
+            color: rgba(232, 213, 183, 0.7);
+            margin-bottom: 8px;
             font-weight: 300;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.4em;
             text-transform: uppercase;
         }
 
         .soundtrack-sub-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(3.5rem, 7vw, 6rem);
-            color: #4a7c59;
+            font-size: clamp(3.8rem, 7.5vw, 6.4rem);
+            color: #9ddbb8;
             font-style: italic;
-            font-weight: 700;
-            margin-bottom: 50px;
-            letter-spacing: -0.02em;
+            font-weight: 600;
+            margin-bottom: 32px;
+            letter-spacing: -0.04em;
             line-height: 0.9;
-            text-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+            text-shadow: 0 6px 25px rgba(0,0,0,0.45);
         }
 
         .soundtrack-description {
-            max-width: 750px;
-            margin: 0 auto 60px;
+            max-width: 860px;
+            margin: 0 auto 70px;
             position: relative;
+        }
+
+        .soundtrack-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: clamp(24px, 4vw, 50px);
+        }
+
+        .soundtrack-panel {
+            background: rgba(8, 8, 8, 0.65);
+            border-radius: 28px;
+            border: 1px solid rgba(232, 213, 183, 0.12);
+            padding: clamp(20px, 3vw, 36px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .soundtrack-panel > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .soundtrack-panel::after {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border-radius: 22px;
+            border: 1px solid rgba(74, 124, 89, 0.12);
+            pointer-events: none;
         }
 
         .soundtrack-intro {
@@ -891,45 +938,7 @@
             color: rgba(232, 213, 183, 0.95);
         }
 
-        /* Decorative Elements - Constrained within section bounds */
-        .soundtrack-hero::after {
-            content: '♪ ♫ ♪';
-            position: absolute;
-            top: 20px;
-            right: 8%;
-            font-size: 6rem;
-            color: rgba(74, 124, 89, 0.25);
-            transform: rotate(15deg);
-            animation: floatAndScale 4s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        .soundtrack-hero::before {
-            content: '♫ ♪ ♫';
-            position: absolute;
-            bottom: 100px;
-            left: 8%;
-            font-size: 5rem;
-            color: rgba(232, 213, 183, 0.25);
-            transform: rotate(-10deg);
-            animation: floatAndScale 5s ease-in-out infinite reverse;
-            pointer-events: none;
-        }
-
-        @keyframes floatAndScale {
-            0%, 100% {
-                transform: translateY(0px) scale(1) rotate(15deg);
-            }
-            25% {
-                transform: translateY(-8px) scale(1.1) rotate(12deg);
-            }
-            50% {
-                transform: translateY(-12px) scale(1.05) rotate(18deg);
-            }
-            75% {
-                transform: translateY(-6px) scale(1.08) rotate(14deg);
-            }
-        }
+        /* Decorative elements removed for cleaner hero */
 
         /* Section Separators with Multi-Layer Parallax */
         .section-separator {
@@ -1214,6 +1223,75 @@
             background: #8b4513;
         }
 
+        /* Streaming platform player */
+        .streaming-player {
+            margin-top: clamp(60px, 8vw, 100px);
+            text-align: center;
+        }
+
+        .streaming-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            color: #e8d5b7;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .streaming-subtitle {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        .platform-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .platform-tab {
+            padding: 10px 20px;
+            border-radius: 999px;
+            border: 1px solid rgba(232, 213, 183, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            font-family: 'Garamond', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .platform-tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .platform-tab.active {
+            background: rgba(74, 124, 89, 0.3);
+            border-color: rgba(74, 124, 89, 0.6);
+            color: #e8d5b7;
+        }
+
+        .platform-icon {
+            font-size: 0.85rem;
+        }
+
+        .player-embed {
+            max-width: 660px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .player-embed iframe {
+            display: block;
+        }
+
         /* Mobile soundtrack controls - larger touch targets */
         @media (max-width: 768px) {
             .play-btn {
@@ -1262,6 +1340,27 @@
             min-height: 100vh;
         }
 
+        .about-section#about-content::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 15, 15, 0.88);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+            pointer-events: none;
+        }
+
+        .about-section#about-content.stand-alone::before,
+        .about-section#about-content:not(.stand-alone)::before {
+            opacity: 1;
+        }
+
+        .about-section#about-content > * {
+            position: relative;
+            z-index: 1;
+        }
+
         .about-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -1270,8 +1369,17 @@
         }
 
         .about-hero-content {
-            text-align: center;
-            margin-bottom: 100px;
+            position: absolute;
+            left: clamp(20px, 5vw, 90px);
+            bottom: clamp(30px, 8vh, 120px);
+            text-align: left;
+            margin: 0;
+            max-width: min(520px, 45vw);
+            padding: clamp(20px, 3vw, 38px);
+            border-radius: 18px;
+            border: 1px solid rgba(232, 213, 183, 0.18);
+            background: rgba(3, 3, 3, 0.68);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.55);
         }
 
         .about-hero-title {
@@ -1281,7 +1389,8 @@
             letter-spacing: 3px;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 30px;
+            margin-bottom: 18px;
+            text-align: left;
             transition: transform 0.8s ease-out, opacity 0.8s ease-out;
             opacity: 0;
             transform: translateY(30px);
@@ -1293,16 +1402,15 @@
         }
 
         .about-statement {
-            font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+            font-size: clamp(1.1rem, 1.8vw, 1.35rem);
             line-height: 1.8;
-            color: rgba(232, 213, 183, 0.7);
-            max-width: 900px;
-            margin: 0 auto 60px;
-            padding: 0 20px;
+            color: rgba(232, 213, 183, 0.8);
+            margin: 0;
+            padding: 0;
             font-weight: 300;
             letter-spacing: 0.02em;
             font-family: 'Garamond', 'Garamond', serif;
-            text-align: center;
+            text-align: left;
             position: relative;
         }
 
@@ -1534,6 +1642,28 @@
             position: relative;
         }
 
+        .journey-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(16, 21, 18, 0.88);
+            border-radius: 0;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+            pointer-events: none;
+        }
+
+        .journey-section.stand-alone::before,
+        .journey-section:not(.stand-alone)::before {
+            opacity: 1;
+        }
+
+        .journey-section > * {
+            position: relative;
+            z-index: 1;
+        }
+
         .journey-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -1661,6 +1791,27 @@
             padding: 100px 20px;
             background: transparent;
             position: relative;
+        }
+
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(11, 11, 11, 0.9);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+            pointer-events: none;
+        }
+
+        .contact-section.stand-alone::before,
+        .contact-section:not(.stand-alone)::before {
+            opacity: 1;
+        }
+
+        .contact-section > * {
+            position: relative;
+            z-index: 1;
         }
 
         .contact-container {
@@ -2148,27 +2299,21 @@
 
         /* Add spacing between sections for smoother transitions */
         section[id] {
-            margin-top: 120px;
-            margin-bottom: 120px;
+            margin: clamp(40px, 8vh, 90px) 0;
             position: relative;
             z-index: 10; /* Above hero and overlay */
         }
 
-        /* First section (books) needs top margin to clear hero */
+        /* First section (books) hovers over hero */
         #books {
-            margin-top: 100vh; /* Start after hero */
-            padding-top: 80px;
-        }
-
-        /* Soundtrack section butts up against About section */
-        #soundtrack {
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        /* About section has no top margin to connect with soundtrack */
-        #about {
             margin-top: 0;
+            padding-top: clamp(160px, 24vh, 260px);
+        }
+
+        /* Tighten gaps between stacked panels */
+        #soundtrack,
+        #about {
+            margin-top: clamp(30px, 6vh, 70px);
         }
 
         [data-soft-panel] {
@@ -2220,37 +2365,65 @@
 
 .hero.home-hero {
     position: relative;
-    padding: 120px 20px 160px;
-    height: auto;
-    min-height: 60vh;
+    padding: 0 clamp(20px, 5vw, 100px) clamp(40px, 10vh, 120px);
+    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     justify-content: flex-end;
     gap: 30px;
 }
 
-.hero.home-hero .hero-content {
-    max-width: 720px;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.55);
-    padding: 40px 32px;
-    border-radius: 8px;
-    border: 1px solid rgba(232, 213, 183, 0.15);
-}
+        .hero.home-hero .hero-content {
+            max-width: clamp(420px, 42vw, 560px);
+            text-align: right;
+            background: rgba(0, 0, 0, 0.6);
+            padding: clamp(28px, 4vw, 48px);
+            border-radius: 18px;
+            border: 1px solid rgba(232, 213, 183, 0.2);
+            box-shadow: 0 30px 70px rgba(0,0,0,0.55);
+            margin-left: auto;
+        }
 
-.hero.home-hero h1 {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    margin-bottom: 16px;
-}
+        .hero.home-hero h1 {
+            font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+            margin-bottom: 16px;
+            text-align: right;
+        }
 
-.hero-actions {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-top: 28px;
-}
+        .hero-you {
+            font-style: normal;
+            color: #e8d5b7;
+            font-size: 1.15em;
+            letter-spacing: 0.04em;
+            text-decoration: underline;
+            text-decoration-color: rgba(124, 168, 138, 0.6);
+            text-underline-offset: 6px;
+            text-decoration-thickness: 3px;
+        }
+
+        .hero.home-hero p {
+            text-align: right;
+            margin-left: auto;
+        }
+
+        .hero-subtext {
+            text-wrap: pretty;
+        }
+
+        .hero-author-line {
+            font-style: italic;
+            color: rgba(177, 200, 176, 0.9);
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
 
 .hero-actions .book-action {
     min-width: 180px;
@@ -2412,21 +2585,556 @@ section.stand-alone#contact {
     color: #e8d5b7;
 }
 
-@media (max-width: 768px) {
+
+/* ==========================================================
+   MOBILE EXPERIENCE — Touch devices (phones + tablets)
+   Architecture:
+     - "Wrapper" sections (.books-section, .about-section#about-content,
+       .journey-section) are pass-through — NO snap, NO height lock,
+       NO overflow clip. They just hold children.
+     - "Screen" elements are individual snap targets: hero, each book,
+       soundtrack, each journey item, contact. Each = one full viewport.
+   ========================================================== */
+
+@media (pointer: coarse) {
+
+    /* ── Snap engine ── */
+    html {
+        scroll-snap-type: y mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Hide desktop-only decorative layers on mobile */
+    .quote-layer { display: none !important; }
+    #stage-bg { display: none !important; }
+    #hero-overlay { display: none !important; }
+
+    /* Kill stand-alone page margins */
+    section.stand-alone { margin: 0 !important; }
+
+    /* ── PASS-THROUGH WRAPPERS ──
+       These sections contain multiple snap children.
+       They must NOT be snap targets, must NOT clip, must NOT lock height. */
+    .books-section,
+    .about-section#about-content,
+    .journey-section {
+        scroll-snap-align: none !important;
+        height: auto !important;
+        max-height: none !important;
+        min-height: auto !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    /* Inner containers — flatten */
+    .books-container,
+    .soundtrack-container,
+    .about-container,
+    .journey-container,
+    .contact-container,
+    .overview-container {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Overlays always visible on mobile */
+    .journey-section::before,
+    .contact-section::before,
+    .about-section#about-content::before,
+    .soundtrack-section::after {
+        opacity: 1 !important;
+    }
+
+    /* ── SNAP SCREEN BASE ──
+       Common styles for every element that acts as its own swipe page. */
+    .hero.home-hero,
+    .hero.about-section,
+    .book-section-timeline,
+    .journey-section-timeline,
+    .soundtrack-section,
+    .contact-section {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        min-height: 100dvh;
+        height: 100dvh;
+        max-height: 100dvh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 60px 20px 24px;
+    }
+
+    /* ── HERO ── */
     .hero.home-hero {
-        padding: 100px 16px 120px;
+        padding: 0 24px;
+    }
+
+    .section-separator {
+        height: 100dvh !important;
     }
 
     .hero.home-hero .hero-content {
-        padding: 28px 22px;
+        max-width: 100%;
+        width: 100%;
+        text-align: center;
+        padding: 24px 20px;
+        margin: 0;
+        border-radius: 16px;
     }
 
-    .overview-container {
-        grid-template-columns: 1fr;
+    .hero.home-hero h1 {
+        font-size: 1.8rem;
+        text-align: center;
+        line-height: 1.2;
+        margin-bottom: 12px;
     }
 
-    section.stand-alone {
-        margin-top: 40px;
-        margin-bottom: 80px;
+    .hero.home-hero p {
+        text-align: center;
+        margin: 0;
+        font-size: 0.95rem;
     }
+
+    .hero-actions {
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .hero-actions .book-action {
+        width: 100%;
+        min-width: unset;
+        text-align: center;
+        padding: 14px 16px;
+        font-size: 0.9rem;
+    }
+
+    .hero-author-line {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .hero-subtext {
+        font-size: 0.95rem;
+    }
+
+    /* ── BOOKS ── */
+    /* The "BOOKS" heading inside .books-section */
+    .books-section > .books-container > .section-title {
+        scroll-snap-align: none;
+        display: none !important;
+    }
+
+    /* Each book = its own snap screen */
+    .book-section-timeline {
+        margin: 0 !important;
+        background: #0b0b0b;
+        gap: 0;
+    }
+
+    /* Kill desktop timeline pseudo-elements */
+    .book-section-timeline::after,
+    .book-section-timeline::before { display: none !important; }
+
+    .book-content-area {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* Book cover — compact, centered */
+    .book-cover-wrapper {
+        all: unset !important;
+        display: block !important;
+        width: 130px !important;
+        flex-shrink: 0;
+        text-align: center;
+    }
+
+    .book-cover-wrapper img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    /* Book text — strip all card styling */
+    .book-content {
+        all: unset !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 6px !important;
+        color: #f7f0e3 !important;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .book-title {
+        font-size: 1.3rem !important;
+        margin: 0 !important;
+        opacity: 1 !important;
+        transform: none !important;
+        color: #f7f0e3 !important;
+    }
+
+    .book-subtitle {
+        font-size: 0.75rem !important;
+        margin: 0 0 4px !important;
+        opacity: 1 !important;
+        transform: none !important;
+        color: rgba(247,240,227,0.6) !important;
+    }
+
+    /* Synopsis — truncated, first paragraph only */
+    .book-synopsis {
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
+        text-align: center;
+        color: rgba(247,240,227,0.8) !important;
+    }
+
+    .book-synopsis p { margin: 0; }
+    .book-synopsis p:not(:first-child) { display: none; }
+
+    .book-meta {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 8px !important;
+        margin-top: auto !important;
+        flex-shrink: 0;
+    }
+
+    .book-action {
+        width: 100% !important;
+        text-align: center !important;
+        padding: 12px 16px !important;
+        font-size: 0.9rem !important;
+    }
+
+    /* Hide cassette player on mobile */
+    .cassette-player { display: none !important; }
+
+    /* ── SOUNDTRACK ── */
+    .soundtrack-section {
+        padding: 60px 20px 24px !important;
+        overflow-y: auto !important;
+    }
+
+    .vinyl-decoration { display: none !important; }
+
+    .soundtrack-hero { margin-bottom: 12px; }
+    .soundtrack-main-title { font-size: 1.3rem !important; letter-spacing: 0.08em !important; }
+    .soundtrack-sub-title { font-size: 0.95rem !important; }
+    .soundtrack-description { margin-top: 8px; }
+
+    .soundtrack-columns {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .soundtrack-panel {
+        all: unset !important;
+        display: block !important;
+        color: #f7f0e3 !important;
+    }
+
+    .soundtrack-intro {
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Drop cap — reset on mobile */
+    .soundtrack-intro.drop-cap .drop-cap-letter {
+        float: none !important;
+        font-size: inherit !important;
+        line-height: inherit !important;
+        margin: 0 !important;
+    }
+
+    /* Track cards — compact horizontal list */
+    .track-collection {
+        gap: 8px !important;
+        margin-top: 12px !important;
+    }
+
+    .track-card {
+        all: unset !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 12px !important;
+        padding: 10px !important;
+        border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+        color: #f7f0e3 !important;
+    }
+
+    .track-visual {
+        width: 48px !important;
+        height: 48px !important;
+        flex-shrink: 0;
+    }
+
+    .album-cover {
+        position: relative !important;
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 6px !important;
+        overflow: hidden;
+    }
+
+    .album-cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .vinyl-record { display: none !important; }
+
+    .track-info {
+        all: unset !important;
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 !important;
+        min-width: 0 !important;
+        color: #f7f0e3 !important;
+    }
+
+    .track-title {
+        font-size: 0.95rem !important;
+        margin: 0 !important;
+        color: #f7f0e3 !important;
+    }
+
+    .track-description {
+        font-size: 0.75rem !important;
+        line-height: 1.4 !important;
+        margin: 2px 0 0 !important;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        color: rgba(247,240,227,0.5) !important;
+    }
+
+    .play-btn {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1rem !important;
+        margin: 0 !important;
+        flex-shrink: 0;
+    }
+
+    /* Streaming player — compact */
+    .streaming-player { margin-top: 16px; }
+    .streaming-title { font-size: 1rem !important; margin-bottom: 4px !important; }
+    .streaming-subtitle { font-size: 0.8rem !important; }
+    .platform-tabs { gap: 4px; }
+    .platform-tab { padding: 6px 10px; font-size: 0.75rem; }
+    .player-embed { max-width: 100%; }
+    .player-embed iframe { height: 180px !important; }
+
+    /* ── ABOUT HERO ── */
+    .hero.about-section {
+        padding: 0 24px;
+    }
+
+    .about-hero-content {
+        position: static !important;
+        max-width: 100% !important;
+        padding: 24px 20px !important;
+        margin: 0 !important;
+        text-align: center !important;
+        border: none !important;
+        background: rgba(0,0,0,0.5) !important;
+        box-shadow: none !important;
+        border-radius: 16px !important;
+    }
+
+    .about-hero-title {
+        font-size: 1.4rem !important;
+        letter-spacing: 1px !important;
+        text-align: center !important;
+    }
+
+    .about-statement {
+        font-size: 0.9rem !important;
+        text-align: center !important;
+    }
+
+    /* ── ABOUT TIMELINE (journey highlights) ── */
+    /* Each journey item = its own snap screen */
+    .journey-section-timeline {
+        margin: 0 !important;
+        background: #0f0f0f;
+    }
+
+    /* Kill timeline pseudo-elements */
+    .journey-container::before { display: none !important; }
+    .journey-section-timeline::after,
+    .journey-section-timeline::before { display: none !important; }
+
+    .journey-section-timeline.left,
+    .journey-section-timeline.right {
+        padding: 60px 24px 24px !important;
+    }
+
+    .section-number,
+    .journey-number {
+        position: static !important;
+        transform: none !important;
+        margin: 0 auto 12px !important;
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 1.4rem !important;
+        opacity: 1 !important;
+    }
+
+    .section-content { text-align: center; }
+    .section-title { text-align: center !important; font-size: 1.3rem !important; }
+    .section-location { text-align: center !important; font-size: 0.75rem !important; }
+    .section-description { text-align: center !important; font-size: 0.9rem !important; line-height: 1.5 !important; }
+
+    /* ── VISUAL JOURNEY (Gallery) ── */
+    /* Pass-through wrapper already handled above */
+
+    .journey-section .journey-section-timeline::before { display: none !important; }
+
+    .journey-content-area {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .journey-image-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 160px !important;
+        flex-shrink: 0;
+    }
+
+    .journey-image-wrapper img {
+        border-radius: 12px !important;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .journey-title {
+        font-size: 1.2rem !important;
+        text-align: center !important;
+    }
+
+    /* ── CONTACT ── */
+    .contact-section {
+        overflow-y: auto !important;
+    }
+
+    .contact-subtitle {
+        font-size: 0.9rem !important;
+        margin-bottom: 16px !important;
+        text-align: center;
+    }
+
+    .contact-form {
+        all: unset !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        color: #f7f0e3 !important;
+    }
+
+    .form-group {
+        margin-bottom: 12px !important;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.85rem;
+        color: rgba(247,240,227,0.6);
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100% !important;
+        padding: 14px !important;
+        font-size: 16px !important; /* prevent iOS zoom */
+        border-radius: 8px !important;
+        background: rgba(255,255,255,0.05) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        color: #f7f0e3 !important;
+        box-sizing: border-box;
+    }
+
+    .form-group textarea {
+        resize: none;
+        height: 100px !important;
+    }
+
+    .form-submit {
+        width: 100%;
+        padding: 14px !important;
+        font-size: 1rem !important;
+        margin-top: 4px;
+    }
+}
+
+/* ── PHONE LANDSCAPE ── */
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+    html { scroll-snap-type: y proximity; }
+
+    .hero.home-hero,
+    .hero.about-section,
+    .book-section-timeline,
+    .journey-section-timeline,
+    .soundtrack-section,
+    .contact-section {
+        height: auto !important;
+        max-height: none !important;
+        min-height: 100dvh;
+        padding: 16px 32px !important;
+    }
+
+    .hero.home-hero .hero-content {
+        max-width: 70%;
+        margin: 0 auto;
+    }
+
+    .hero.home-hero h1 { font-size: 1.4rem; }
+
+    .book-content-area { flex-direction: row !important; }
+    .book-cover-wrapper { width: 100px !important; }
+    .book-synopsis { -webkit-line-clamp: 4 !important; }
+}
+
+/* ── TABLET PORTRAIT (431–820px) ── */
+@media (min-width: 431px) and (max-width: 820px) and (orientation: portrait) and (pointer: coarse) {
+    .hero.home-hero h1 { font-size: 2.2rem; }
+    .hero.home-hero .hero-content { max-width: 85%; margin: 0 auto; }
+    .book-cover-wrapper { width: 160px !important; }
+    .book-synopsis { -webkit-line-clamp: 10 !important; font-size: 0.9rem !important; }
+    .track-visual { width: 64px !important; height: 64px !important; }
+    .album-cover { width: 64px !important; height: 64px !important; }
+    .track-description { -webkit-line-clamp: 2 !important; }
+    .journey-image-wrapper { height: 220px !important; }
 }

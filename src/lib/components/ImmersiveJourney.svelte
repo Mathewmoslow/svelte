@@ -3,6 +3,7 @@
 	import { books } from '$lib/data/books';
 	import { tracks } from '$lib/data/tracks';
 	import { visualJourney } from '$lib/data/visual-journey';
+	import { base } from '$app/paths';
 
 	const featuredBook = books[0];
 	const highlightTracks = tracks.slice(0, 3);
@@ -138,12 +139,12 @@
 				<p class="eyebrow">Mathew Moslow</p>
 				<h1>Stories that refuse to stay on the page.</h1>
 				<p>
-					Memoir, music and radical reinvention stitched into a single scroll. Take the long way through the
-					books, soundtrack and visual journey so every beat lands with intention.
+					Memoir, music, and the whole unraveling. Scroll through the books, the soundtrack, and the visual
+					story behind both. Take your time.
 				</p>
 				<div class="hero-actions">
-					<a href="/books">Explore the books</a>
-					<a class="ghost" href="/soundtrack">Listen to the soundtrack</a>
+					<a href={`${base}/books`}>Explore the books</a>
+					<a class="ghost" href={`${base}/soundtrack`}>Listen to the soundtrack</a>
 				</div>
 			</div>
 		</section>
@@ -212,12 +213,11 @@
 			<p class="eyebrow">What’s next?</p>
 			<h2>Reserve the next chapter or send a note.</h2>
 			<p>
-				Book clubs, soundtrack drops, speaking dates—everything new lands with the list first. Reach out and
-				let’s plan the next release together.
+				Book clubs, soundtrack drops, speaking dates. Everything new goes to the list first. Reach out.
 			</p>
 			<div class="button-row">
-				<a href="/contact">Contact Mathew</a>
-				<a class="ghost" href="/books">Reserve a Copy</a>
+				<a href={`${base}/contact`}>Contact Mathew</a>
+				<a class="ghost" href={`${base}/books`}>Reserve a Copy</a>
 			</div>
 		</section>
 	</div>

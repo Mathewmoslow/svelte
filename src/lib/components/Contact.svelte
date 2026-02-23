@@ -1,5 +1,6 @@
 <script>
 	import { fade } from 'svelte/transition';
+	export let standalone = true;
 
 	let name = '';
 	let email = '';
@@ -40,10 +41,10 @@
 	}
 </script>
 
-<section class="contact-section stand-alone" id="contact" data-bg="#0b0b0b">
+<section class="contact-section" class:stand-alone={standalone} id="contact" data-bg="#0b0b0b">
 	<div class="contact-container" transition:fade={{ duration: 400 }}>
 		<h2 class="section-title visible">Get in Touch</h2>
-		<p class="contact-subtitle">Have thoughts on the books? Questions about the journey? I'd love to hear from you.</p>
+		<p class="contact-subtitle">Have thoughts on the books? Questions about the writing? Send them my way.</p>
 
 		{#if success}
 			<p style="color: #4a7c59; font-size: 1.1rem; text-align: center;">Thank you! Your message is on its way.</p>
